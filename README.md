@@ -35,8 +35,9 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 
 - Unzip, keep the folder together, and run `mytune.exe` (single-file publish).
 - No .NET install needed — the runtime is inside the executable.
-- The first run shows a connection dialog. Once the connection has succeeded, the settings are saved to
-  `mytune.json` next to the executable (the password is stored encrypted).
+- The only thing to set up is `mytune.json` next to the executable: either edit it (see below), or just run
+  `mytune.exe` — when the bundled defaults do not connect, a connection dialog opens with those values filled in.
+  Once the connection has succeeded, what you typed is saved back (the password is stored encrypted).
 
 ## What it does
 
@@ -111,7 +112,8 @@ passwords are never written to it). Send me that file.
 
 ## mytune.json
 
-You do not have to write this file — the connection dialog creates it. To prepare it by hand:
+The zip ships a small `mytune.json` with default values (`localhost:3306`, `root`). Edit it, or let the
+connection dialog fill it in:
 
 ```json
 {
