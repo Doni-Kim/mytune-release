@@ -101,8 +101,11 @@ https://developer.microsoft.com/microsoft-edge/webview2/
 
 ## If something breaks
 
-Errors are written to `mytune.log` next to the executable (the file only appears when something went wrong;
-passwords are never written to it). Send me that file.
+Errors are written to `mytune.log` next to the executable (the file only appears when something went wrong).
+
+- **Bugs and questions** — open an [issue](https://github.com/Doni-Kim/mytune-release/issues).
+  Please do not attach the log there: it holds no passwords, but it can contain server addresses and SQL text.
+- **The log file**, or anything you would rather not post in public — mail it to **doniikim@gmail.com**.
 
 ## Built with
 
@@ -141,3 +144,9 @@ connection dialog fill it in:
 
 Free to use, at work or at home. Please do not redistribute the binary or reverse-engineer it.
 The source is not published.
+
+## Contact
+
+DBMS Works — **doniikim@gmail.com**
+
+Also available for Oracle → PostgreSQL / MySQL migration and database performance tuning work.

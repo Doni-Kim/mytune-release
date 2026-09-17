@@ -89,7 +89,11 @@ GRANT CONNECTION_ADMIN ON *.* TO 'mytune'@'%';         -- 선택: 남의 세션�
 
 ## 문제가 생기면
 
-오류가 나면 실행 파일 옆에 `mytune.log` 가 생깁니다(평소에는 만들지 않고, 비밀번호는 기록하지 않습니다). 그 파일을 메일로 보내 주시면 됩니다.
+오류가 나면 실행 파일 옆에 `mytune.log` 가 생깁니다(평소에는 만들지 않습니다).
+
+- **버그 · 질문**: [Issues](https://github.com/Doni-Kim/mytune-release/issues) 에 남겨 주세요.
+  로그 파일은 거기에 올리지 마세요 — 비밀번호는 없지만 서버 주소와 SQL 문장이 들어 있을 수 있습니다.
+- **로그 파일**이나 공개하기 어려운 내용은 메일로 보내 주세요: **doniikim@gmail.com**
 
 ## 기술 스택
 
@@ -126,3 +130,9 @@ zip 에는 기본값(`localhost:3306` · `root`)이 든 작은 `mytune.json` 이
 
 업무든 개인이든 자유롭게 쓰셔도 됩니다. 실행 파일 재배포와 리버스 엔지니어링은 삼가 주세요.
 소스는 공개하지 않습니다.
+
+## 연락처
+
+DBMS Works — **doniikim@gmail.com**
+
+Oracle → PostgreSQL / MySQL 마이그레이션, DB 성능 튜닝 문의도 받습니다.
