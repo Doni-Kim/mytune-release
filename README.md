@@ -41,8 +41,9 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 
 ## What it does
 
-- **Live dashboard** — buffer pool hit ratio, connections, QPS / TPS / rollbacks, rows read and modified,
-  disk and redo throughput, history list length, top wait events, trend graphs, and the session list.
+- **Live dashboard** — buffer pool hit ratio and connections (gauges), QPS / TPS / running / waiting (trend graphs),
+  row lock waits, deadlocks, rollbacks, slow queries, rows read and modified, disk read / write, network in / out,
+  redo and history list length, top wait events, and the session list. Each metric appears once.
   Cumulative server counters are always shown as the change since the previous sample.
 - **Lock chains that name the real blocker** — row locks come from `data_lock_waits`; metadata locks are
   resolved with the server's own lock-compatibility rules, so a session is listed as a blocker only when
@@ -85,6 +86,9 @@ GRANT CONNECTION_ADMIN ON *.* TO 'mytune'@'%';         -- optional: Ctrl+K on ot
 
 With such an account the plan in Session detail is an *estimated* plan (and says so); the live plan of
 another user's running statement is only available to an administrative account such as root.
+
+Disk (`D`) and index diagnostics (`X`) see only schemas the account has a privilege on — `information_schema`
+hides the rest without an error. mytune says how many schemas are hidden; grant `SELECT` on them to see them.
 
 ## Blank window? (WebView2)
 
