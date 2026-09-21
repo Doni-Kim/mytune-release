@@ -18,9 +18,9 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 |---|---|
 | ![대시보드](screenshots/dashboard.png) | ![Top SQL](screenshots/top-sql.png) |
 
-| 락 사슬 | 세션 상세 |
+| Lock Chain | 세션 상세 |
 |---|---|
-| ![락 사슬](screenshots/locks.png) | ![세션 상세](screenshots/session-detail.png) |
+| ![Lock Chain](screenshots/locks.png) | ![세션 상세](screenshots/session-detail.png) |
 
 | History | 알림 |
 |---|---|
@@ -42,16 +42,21 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 - **실시간 대시보드**: 버퍼 풀 적중률 · 접속 수(게이지), QPS · TPS · Running · Waiting(추이 그래프),
   행 락 대기 · 데드락 · 롤백 · 슬로 쿼리 · 읽고 고친 행 · 디스크 읽기/쓰기 · 네트워크 받기/보내기 · redo · history list, 대기 이벤트, 세션 표. 한 지표는 한 곳에만 나옵니다.
   서버의 누적 카운터는 늘 직전 주기와의 차이로 보여 줍니다.
-- **진짜 blocker 를 짚는 락 사슬**: 행 락은 `data_lock_waits` 로, 메타데이터 락은 서버의 락 호환성 규칙으로 판정해 실제로 충돌하는 세션만 blocker 로 냅니다.
+- **진짜 blocker 를 짚는 Lock Chain**: 행 락은 `data_lock_waits` 로, 메타데이터 락은 서버의 락 호환성 규칙으로 판정해 실제로 충돌하는 세션만 blocker 로 냅니다.
   `F5` 는 막는 세션과 막힌 세션을 함께 보여 줍니다.
 - **세션 상세**(`Enter`): 문장 전문 · 실행 계획 · 쥔 락 · 접속 속성. `Ctrl+K` 로 쿼리만 또는 접속째 KILL, `Ctrl+X` 로 Excel 저장.
 - **팝업**: Server(`I`) · Connections(`C`) · Locks(`A`) · InnoDB(`V`) · Replication(`W`) · Top SQL(`T`, 델타 · 검색) · 인덱스 진단(`X`) · Disk(`D`).
-- **임계값 알림** 12종: 접속 포화 · 대기 세션 · idle in transaction · 긴 문장 · 버퍼 풀 적중률 · 롤백 비율 · 디스크 임시 테이블 · 락 사슬 · 데드락 · history list · 복제 지연 · 복제 스레드 중단.
+- **임계값 알림** 12종: 접속 포화 · 대기 세션 · idle in transaction · 긴 문장 · 버퍼 풀 적중률 · 롤백 비율 · 디스크 임시 테이블 · Lock Chain · 데드락 · history list · 복제 지연 · 복제 스레드 중단.
 - **History**: `L` 로 로컬 SQLite 에 모니터링 데이터를 쌓고, `H` 로 지난 흐름을 되짚습니다.
   - 구간은 1시간 / 6시간 / 24시간 / 1주 / 1개월 / 전체, 지표는 17가지입니다.
   - 오래된 기록은 자동으로 지웁니다(기본 지표 30일 · 세션 7일, `mytune.json` 에서 조정).
 - Excel 저장: ClosedXML 기반이라 Excel 이 없어도 xlsx 파일이 저장됩니다.
 - 테마 12종(밝은 6 · 어두운 6). 접속이 끊기면 스스로 다시 붙습니다.
+- **2.2 에서 더한 것**: Error log 팝업(`E`, `performance_schema.error_log`, MySQL 8.0.22 부터) · Server 의 Changed settings 와 Memory in use · Connections 의 Load by user · Index 의 Hot tables · Top SQL 의 P95 / P99.
+- **막힘 트리**: Locks(`A`)가 누가 누구를 막는지 트리로 그리고, Excel 에도 사슬 전체가 실립니다.
+- **찾기**: `/` 로 세션을 글자로 거릅니다.
+- **알림이 켜지는 순간**: 막힘 트리 · 문장 · 데드락 내용을 `captures\` 아래 파일로 남기고, 위험 알림은 창이 앞에 없을 때 작업 표시줄 깜빡임 · Windows 알림으로 알려 줍니다.
+- History 에서 한 시점을 누르면 그때 기록된 세션이 나옵니다.
 - `F1` 을 누르면 단축키 도움말이 나옵니다.
 
 자세한 사용법은 첨부한 `mytune.html`(스크린샷이 든 매뉴얼)을 참고해 주세요. 사용상 제한 없습니다.

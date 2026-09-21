@@ -60,6 +60,13 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   - Old rows are trimmed automatically (30 days of metrics, 7 days of sessions by default; configurable).
 - **Excel export** — built on ClosedXML, so the `.xlsx` is written even without Excel installed.
 - 12 themes (6 light, 6 dark). Reconnects by itself when the connection drops.
+- **New in 2.2** — Error log popup (`E`, from `performance_schema.error_log`, MySQL 8.0.22+); Changed settings and
+  Memory in use in Server; Load by user in Connections; Hot tables in Index; P95 / P99 in Top SQL.
+- **Blocking tree** — Locks (`A`) draws who blocks whom as a tree, and the Excel export carries the whole chain.
+- **Find** — `/` filters the session list by text.
+- **When an alert fires** — the blocking tree, statements or the deadlock report are saved to a file under `captures\`,
+  and a Critical alert flashes the taskbar and shows a Windows notification when the window is not in front.
+- In History, click a point in time to see the sessions that were logged at that moment.
 - Press `F1` for the keyboard shortcuts.
 
 The bundled `mytune.html` is the full manual with screenshots (in Korean).
