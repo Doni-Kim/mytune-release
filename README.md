@@ -67,6 +67,8 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 - **When an alert fires** — the blocking tree, statements or the deadlock report are saved to a file under `captures\`,
   and a Critical alert flashes the taskbar and shows a Windows notification when the window is not in front.
 - In History, click a point in time to see the sessions that were logged at that moment.
+- `sslMode` gains `verify-ca` / `verify-full`, with `sslCa` for the CA file; a rejected certificate is explained in the
+  connection dialog. Hot tables now shows 50 rows with its share of all table I/O time and a `Δ delta` mode.
 - Press `F1` for the keyboard shortcuts.
 
 The bundled `mytune.html` is the full manual with screenshots (in Korean).
@@ -147,7 +149,7 @@ connection dialog fill it in:
 
 - Write `password` in plain text — it is encrypted on the first run and stored back.
 - `database` may stay empty — mytune watches the whole server.
-- `sslMode`: `none` / `preferred` / `required`.
+- `sslMode`: `none` / `preferred` / `required` / `verify-ca` / `verify-full`. `sslCa`: the CA file (.pem) the verify modes trust — empty means the Windows certificate store. An unknown `sslMode` is reported instead of connecting.
 - Sections such as `alerts`, `topSql` and `logRetention` are optional. `mytune_sample_en.json` in the zip
   documents every setting.
 

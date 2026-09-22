@@ -57,6 +57,7 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 - **찾기**: `/` 로 세션을 글자로 거릅니다.
 - **알림이 켜지는 순간**: 막힘 트리 · 문장 · 데드락 내용을 `captures\` 아래 파일로 남기고, 위험 알림은 창이 앞에 없을 때 작업 표시줄 깜빡임 · Windows 알림으로 알려 줍니다.
 - History 에서 한 시점을 누르면 그때 기록된 세션이 나옵니다.
+- `sslMode` 에 `verify-ca` · `verify-full`, CA 파일은 `sslCa` — 인증서가 거부되면 접속 창에 사유와 고칠 곳이 나옵니다. Hot tables 는 50줄 · 전체 대비 비율 · `Δ delta`.
 - `F1` 을 누르면 단축키 도움말이 나옵니다.
 
 자세한 사용법은 첨부한 `mytune.html`(스크린샷이 든 매뉴얼)을 참고해 주세요. 사용상 제한 없습니다.
@@ -131,7 +132,7 @@ zip 에는 기본값(`localhost:3306` · `root`)이 든 작은 `mytune.json` 이
 
 - `password` 는 평문으로 적으면 첫 실행 때 자동 암호화됩니다.
 - `database` 는 비워도 됩니다 — mytune 은 서버 전체를 봅니다.
-- `sslMode`: `none` / `preferred` / `required`.
+- `sslMode`: `none` / `preferred` / `required` / `verify-ca` / `verify-full`. `sslCa`: 검증 모드가 믿을 CA 파일(.pem) — 비우면 Windows 인증서 저장소. 모르는 값이면 접속하지 않고 알립니다.
 - `alerts`, `topSql`, `logRetention` 같은 절은 적지 않아도 됩니다. zip 안의 `mytune_sample_kr.json` 에 모든 설정의 설명이 있습니다.
 
 ## 사용 조건
