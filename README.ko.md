@@ -45,8 +45,10 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
   서버의 누적 카운터는 늘 직전 주기와의 차이로 보여 줍니다.
 - **진짜 blocker 를 짚는 Lock Chain**: 행 락은 `data_lock_waits` 로, 메타데이터 락은 서버의 락 호환성 규칙으로 판정해 실제로 충돌하는 세션만 blocker 로 냅니다.
   `F5` 는 막는 세션과 막힌 세션을 함께 보여 줍니다.
-- **세션 상세**(`Enter`): 문장 전문 · 실행 계획 · 쥔 락 · 접속 속성. `Ctrl+K` 로 쿼리만 또는 접속째 KILL, `Ctrl+X` 로 Excel 저장.
-- **팝업**: Server(`I`) · Connections(`C`) · Locks(`A`) · InnoDB(`V`) · Replication(`W`) · Top SQL(`T`, 델타 · 검색) · 인덱스 진단(`X`) · Disk(`D`).
+- **세션 상세**(`Enter`): 문장 전문 · 실행 계획 · 쥔 락 · 접속 속성. `Ctrl+K` 로 쿼리만 또는 접속째 KILL, `Ctrl+X` 로 Excel 저장(시트 넷: 세션 · SQL · 계획 · Objects).
+- **Object Info**: 세션 상세의 `[Object Info]` 가 계획이 읽는 테이블마다 크기 · 컬럼(히스토그램) · 인덱스(이 계획이 쓴 것은 강조, 카디널리티 · 읽기 수) · 파티션을 보입니다.
+  계획의 조건에 나온 컬럼에 표시하고, 형 · 콜레이션 변환으로 인덱스를 못 쓴 컬럼(경고 1739)을 ⚠ 로 짚습니다. MySQL 8.3 이상.
+- **팝업**: Server(`I`) · Connections(`C`) · Locks(`A`) · InnoDB(`V`) · Replication(`W`) · Top SQL(`T`, 델타 · 검색 · 머리글 정렬) · 인덱스 진단(`X`) · Disk(`D`).
 - **임계값 알림** 12종: 접속 포화 · 대기 세션 · idle in transaction · 긴 문장 · 버퍼 풀 적중률 · 롤백 비율 · 디스크 임시 테이블 · Lock Chain · 데드락 · history list · 복제 지연 · 복제 스레드 중단.
 - **History**: `L` 로 로컬 SQLite 에 모니터링 데이터를 쌓고, `H` 로 지난 흐름을 되짚습니다.
   - 구간은 1시간 / 6시간 / 24시간 / 1주 / 1개월 / 전체, 지표는 17가지입니다.

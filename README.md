@@ -50,9 +50,12 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   resolved with the server's own lock-compatibility rules, so a session is listed as a blocker only when
   its lock really conflicts. `F5` shows blockers together with the sessions they block.
 - **Session detail** (`Enter`) — full statement, execution plan, locks held, connection attributes.
-  `Ctrl+K` kills the query or the whole connection; `Ctrl+X` exports the session to Excel.
+  `Ctrl+K` kills the query or the whole connection; `Ctrl+X` exports the session to Excel (four sheets: session, SQL, plan, objects).
+- **Object Info** — in the session detail, `[Object Info]` shows every table the plan reads: size, columns (with histograms),
+  indexes (the ones this plan uses are highlighted, with cardinality and reads) and partitions. Columns in the plan's conditions are marked,
+  and a type or collation conversion that keeps an index from being used (warning 1739) is flagged. Needs MySQL 8.3 or later.
 - **Panels** — Server (`I`), Connections (`C`), Locks (`A`), InnoDB (`V`), Replication (`W`),
-  Top SQL (`T`, by digest, with a delta mode and text search), Index diagnostics (`X`), Disk (`D`).
+  Top SQL (`T`, by digest, with a delta mode, text search and column-header sorting), Index diagnostics (`X`), Disk (`D`).
 - **Alerts** — 12 rules: connection saturation, waiting sessions, idle in transaction, long statements,
   buffer pool hit, rollback ratio, temp tables on disk, lock chains, deadlocks, history list,
   replication lag and stopped replication threads — with your own thresholds.
