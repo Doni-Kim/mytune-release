@@ -34,8 +34,9 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 
 - 압축을 풀고 폴더째 둔 뒤 `mytune.exe` 를 실행하면 됩니다 (Single File Publishing).
 - .NET 설치 불필요 — 런타임이 실행 파일에 포함되어 있습니다.
-- 설정은 같은 폴더의 `mytune.json` 하나입니다. 파일을 고쳐도 되고(아래 예시), 그냥 실행해도 됩니다 —
-  들어 있는 기본값으로 붙지 못하면 그 값이 채워진 접속 창이 뜹니다. 실제로 접속된 뒤에 입력한 값을 저장합니다(비밀번호는 암호화해서 저장).
+- 설정은 같은 폴더의 접속 파일입니다. zip 에 `mytuneNode1.json` · `mytuneNode2.json` 두 개가 들어 있습니다 — 서버 하나에 파일 하나.
+  서버가 하나면 한 파일만 두고 나머지는 지우세요. 파일을 고쳐도 되고(아래 예시), 그냥 실행해도 됩니다 —
+  들어 있는 값으로 붙지 못하면 그 값이 채워진 접속 창이 뜹니다. 실제로 접속된 뒤에 입력한 값을 저장합니다(비밀번호는 암호화해서 저장).
 
 ## 주요 기능
 
@@ -49,16 +50,25 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 - **임계값 알림** 12종: 접속 포화 · 대기 세션 · idle in transaction · 긴 문장 · 버퍼 풀 적중률 · 롤백 비율 · 디스크 임시 테이블 · Lock Chain · 데드락 · history list · 복제 지연 · 복제 스레드 중단.
 - **History**: `L` 로 로컬 SQLite 에 모니터링 데이터를 쌓고, `H` 로 지난 흐름을 되짚습니다.
   - 구간은 1시간 / 6시간 / 24시간 / 1주 / 1개월 / 전체, 지표는 17가지입니다.
-  - 오래된 기록은 자동으로 지웁니다(기본 지표 30일 · 세션 7일, `mytune.json` 에서 조정).
+  - 오래된 기록은 자동으로 지웁니다(기본 지표 30일 · 세션 7일, `O` 설정 창에서 조정).
 - Excel 저장: ClosedXML 기반이라 Excel 이 없어도 xlsx 파일이 저장됩니다.
-- 테마 12종(밝은 6 · 어두운 6). 접속이 끊기면 스스로 다시 붙습니다.
+- 접속이 끊기면 스스로 다시 붙습니다.
 - **2.2 에서 더한 것**: Error log 팝업(`E`, `performance_schema.error_log`, MySQL 8.0.22 부터) · Server 의 Changed settings 와 Memory in use · Connections 의 Load by user · Index 의 Hot tables · Top SQL 의 P95 / P99.
 - **막힘 트리**: Locks(`A`)가 누가 누구를 막는지 트리로 그리고, Excel 에도 사슬 전체가 실립니다.
 - **찾기**: `/` 로 세션을 글자로 거릅니다.
 - **알림이 켜지는 순간**: 막힘 트리 · 문장 · 데드락 내용을 `captures\` 아래 파일로 남기고, 위험 알림은 창이 앞에 없을 때 작업 표시줄 깜빡임 · Windows 알림으로 알려 줍니다.
 - History 에서 한 시점을 누르면 그때 기록된 세션이 나옵니다.
 - `sslMode` 에 `verify-ca` · `verify-full`, CA 파일은 `sslCa` — 인증서가 거부되면 접속 창에 사유와 고칠 곳이 나옵니다. Hot tables 는 50줄 · 전체 대비 비율 · `Δ delta`.
-- `F1` 을 누르면 단축키 도움말이 나옵니다.
+- **Admin Reference**: `F1` 의 두 번째 탭에서 서버가 가진 설명을 글자를 칠 때마다 찾습니다 — `sys` 스키마 루틴(설명 · 매개변수 · 예제)과
+  `HELP` 가 읽는 서버 도움말 표(명령문 · 함수 700개, 문서 주소 포함). 접속한 서버의 것이라 버전이 저절로 맞고 인터넷이 필요 없습니다.
+  자주 쓰는 관리 작업 54개에는 복사해 쓰는 샘플이 있습니다 — mytune 은 관리 명령을 실행하지 않습니다.
+- **서버마다 설정 파일 하나**: exe 옆에 둘 이상이면 시작할 때 어느 것으로 붙을지 고르는 창이 뜹니다.
+  손으로 고치다 깨진 파일은 목록에 빨갛게, 몇째 줄 몇째 글자가 틀렸는지와 함께 보입니다.
+- **설정 창**: `O` 로 수집 주기(3~60초, 기본 5초) · 로그 보관 · Top SQL · Excel · 알림 임계값 · `L` 로깅이 남길 세션을 화면에서 고칩니다.
+  값을 검사한 뒤 지금 쓰는 설정 파일에 저장하고 바로 적용합니다. 접속 정보는 시작 접속 창에서만 바꿉니다.
+- **테마 12종**: 밝은 6 · 어두운 6, 기본은 GitHub Light. 상단 바에서 고릅니다.
+- **시작할 때 서버가 응답하지 않으면**: 20초 남짓 빈 화면 대신, 누구에게 몇 초째 붙는 중인지 보이는 작은 창이 뜨고 Cancel 로 접속 정보를 고칠 수 있습니다.
+- `F1` 을 누르면 단축키 도움말이, 한 번 더 누르면 Admin Reference 탭이 나옵니다.
 
 자세한 사용법은 첨부한 `mytune.html`(스크린샷이 든 매뉴얼)을 참고해 주세요. 사용상 제한 없습니다.
 
@@ -110,9 +120,13 @@ Disk(`D`) · 인덱스 진단(`X`)은 계정이 권한을 가진 스키마만 �
 - 패키지: MySqlConnector · Microsoft.Data.Sqlite · ClosedXML · Microsoft.Web.WebView2 · Microsoft.AspNetCore.Components.WebView.WindowsForms
 - 실행 파일에 묶인 위 오픈소스들의 저작권 고지 · 라이선스 전문: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) (zip 안에도 들어 있습니다)
 
-## mytune.json 예시
+## 접속 파일 예시 (`mytuneNode1.json` …)
 
-zip 에는 기본값(`localhost:3306` · `root`)이 든 작은 `mytune.json` 이 들어 있습니다. 고쳐서 쓰거나, 접속 창에 맡기면 됩니다:
+zip 에는 작은 틀 두 개 — `mytuneNode1.json`(이 PC, `localhost:3306` · `root`) · `mytuneNode2.json`(다른 서버, 모니터링 계정 `mytune`)이 들어 있습니다 —
+서버마다 파일 하나, 이름은 자유입니다(`prod.json` · `dev.json` …). `mytune.exe` 옆에 둘 이상이면 시작할 때 고르는 창이 뜨고
+(목록에는 `user@server:port/schema` 만 — 비밀번호는 보이지 않습니다), 하나뿐이면 바로 붙습니다.
+고른 파일이 그 실행의 설정이 되어 암호화된 비밀번호 · 창 위치 · 테마가 그 파일에 저장됩니다.
+같은 폴더의 mytune 은 한 번에 하나만 뜨니, 여러 서버를 동시에 보려면 폴더를 나누세요. 파일을 고쳐서 쓰거나, 접속 창에 맡기면 됩니다:
 
 ```json
 {
@@ -126,14 +140,16 @@ zip 에는 기본값(`localhost:3306` · `root`)이 든 작은 `mytune.json` 이
       "sslMode": "preferred"
     }
   ],
-  "interval": 3
+  "interval": 5
 }
 ```
 
 - `password` 는 평문으로 적으면 첫 실행 때 자동 암호화됩니다.
 - `database` 는 비워도 됩니다 — mytune 은 서버 전체를 봅니다.
 - `sslMode`: `none` / `preferred` / `required` / `verify-ca` / `verify-full`. `sslCa`: 검증 모드가 믿을 CA 파일(.pem) — 비우면 Windows 인증서 저장소. 모르는 값이면 접속하지 않고 알립니다.
-- `alerts`, `topSql`, `logRetention` 같은 절은 적지 않아도 됩니다. zip 안의 `mytune_sample_kr.json` 에 모든 설정의 설명이 있습니다.
+- `interval` 은 수집 주기(초)입니다. 3~60, 적지 않으면 5.
+- `alerts`, `topSql`, `logRetention`, `logFilter`(`L` 로깅이 남길 세션) 같은 절은 적지 않아도 됩니다. 프로그램을 닫을 때 기본값으로 채워 넣어 주고, `O` 로 화면에서 고칠 수 있습니다.
+  zip 안의 `mytune_sample_kr.json` 에 모든 설정의 설명이 있습니다.
 
 ## 사용 조건
 

@@ -35,9 +35,10 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 
 - Unzip, keep the folder together, and run `mytune.exe` (single-file publish).
 - No .NET install needed — the runtime is inside the executable.
-- The only thing to set up is `mytune.json` next to the executable: either edit it (see below), or just run
-  `mytune.exe` — when the bundled defaults do not connect, a connection dialog opens with those values filled in.
-  Once the connection has succeeded, what you typed is saved back (the password is stored encrypted).
+- The only thing to set up is a connection file next to the executable. The zip ships two, `mytuneNode1.json` and
+  `mytuneNode2.json` — one file per server. Watching a single server? Keep one and delete the other.
+  Either edit it (see below), or just run `mytune.exe` — when the values do not connect, a connection dialog opens with
+  them filled in. Once the connection has succeeded, what you typed is saved back (the password is stored encrypted).
 
 ## What it does
 
@@ -57,9 +58,9 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   replication lag and stopped replication threads — with your own thresholds.
 - **History** — press `L` to log every sample into a local SQLite file, then `H` to look back.
   - Ranges: 1 hour / 6 hours / 24 hours / 1 week / 1 month / all. 17 metrics.
-  - Old rows are trimmed automatically (30 days of metrics, 7 days of sessions by default; configurable).
+  - Old rows are trimmed automatically (30 days of metrics, 7 days of sessions by default; change it with `O`).
 - **Excel export** — built on ClosedXML, so the `.xlsx` is written even without Excel installed.
-- 12 themes (6 light, 6 dark). Reconnects by itself when the connection drops.
+- Reconnects by itself when the connection drops.
 - **New in 2.2** — Error log popup (`E`, from `performance_schema.error_log`, MySQL 8.0.22+); Changed settings and
   Memory in use in Server; Load by user in Connections; Hot tables in Index; P95 / P99 in Top SQL.
 - **Blocking tree** — Locks (`A`) draws who blocks whom as a tree, and the Excel export carries the whole chain.
@@ -69,7 +70,19 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 - In History, click a point in time to see the sessions that were logged at that moment.
 - `sslMode` gains `verify-ca` / `verify-full`, with `sslCa` for the CA file; a rejected certificate is explained in the
   connection dialog. Hot tables now shows 50 rows with its share of all table I/O time and a `Δ delta` mode.
-- Press `F1` for the keyboard shortcuts.
+- **Admin reference** — the second `F1` tab looks up, as you type, the documentation the server itself carries: the
+  `sys` schema routines (description, parameters, example) and the server help tables that `HELP` reads (700 statements
+  and functions, with a documentation link) — so it always matches the server's version, with no internet needed.
+  54 common admin tasks come with a sample to copy; mytune never runs admin statements.
+- **One settings file per server** — with two or more next to the executable, mytune asks which one to use at startup.
+  A file broken by a hand edit is listed in red with the line and position of the error.
+- **Settings screen** — `O` changes the collection interval (3–60 s, 5 by default), log retention, Top SQL, Excel, alert
+  thresholds and which sessions `L` logs. Values are checked, saved to the settings file in use and applied at once;
+  the connection itself is changed only in the startup window.
+- **12 themes** — six light, six dark, GitHub Light by default; pick one from the top bar.
+- **Server not answering at startup** — a small window shows whom mytune is connecting to and for how long, with
+  Cancel to fix the connection, instead of an empty screen for 20-odd seconds.
+- Press `F1` for the keyboard shortcuts, and again for the Admin Reference tab.
 
 The bundled `mytune.html` is the full manual with screenshots (in Korean).
 
@@ -126,10 +139,14 @@ Errors are written to `mytune.log` next to the executable (the file only appears
 - MySqlConnector · Microsoft.Data.Sqlite · ClosedXML · Microsoft.Web.WebView2 · Microsoft.AspNetCore.Components.WebView.WindowsForms
 - Copyright notices and license texts of these bundled components: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) (also inside the zip)
 
-## mytune.json
+## Connection files (`mytuneNode1.json` …)
 
-The zip ships a small `mytune.json` with default values (`localhost:3306`, `root`). Edit it, or let the
-connection dialog fill it in:
+The zip ships two small templates, `mytuneNode1.json` (this PC — `localhost:3306`, `root`) and `mytuneNode2.json`
+(another server, monitoring login `mytune`) — one file per server, and any name works (`prod.json`, `dev.json` …). With two or more next to `mytune.exe`, mytune asks
+which one to use at startup — the list shows `user@server:port/schema`, never the password. With just one, it connects
+straight away. The chosen file is that run's settings: the encrypted password, window position and theme are saved to it.
+Only one mytune runs per folder; to watch several servers at the same time, use one folder per server.
+Edit a file, or let the connection dialog fill it in:
 
 ```json
 {
@@ -143,14 +160,16 @@ connection dialog fill it in:
       "sslMode": "preferred"
     }
   ],
-  "interval": 3
+  "interval": 5
 }
 ```
 
 - Write `password` in plain text — it is encrypted on the first run and stored back.
 - `database` may stay empty — mytune watches the whole server.
 - `sslMode`: `none` / `preferred` / `required` / `verify-ca` / `verify-full`. `sslCa`: the CA file (.pem) the verify modes trust — empty means the Windows certificate store. An unknown `sslMode` is reported instead of connecting.
-- Sections such as `alerts`, `topSql` and `logRetention` are optional. `mytune_sample_en.json` in the zip
+- `interval` is the collection interval in seconds, 3–60 (5 when left out).
+- Sections such as `alerts`, `topSql`, `logRetention` and `logFilter` (which sessions `L` logs) are optional —
+  mytune fills them in with the defaults when it closes, and `O` edits them on screen. `mytune_sample_en.json` in the zip
   documents every setting.
 
 ## Terms
