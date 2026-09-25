@@ -54,6 +54,7 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 - **Object Info** — in the session detail and in Top SQL (click a row), `[Object Info]` shows every table the plan reads: size, columns (with histograms),
   indexes (the ones this plan uses are highlighted, with cardinality and reads) and partitions. Columns in the plan's conditions are marked,
   and a type or collation conversion that keeps an index from being used (warning 1739) is flagged. Needs MySQL 8.3 or later.
+- **Find SQL** (`Ctrl+F`) — type a statement digest to open its statistics, plan and Object Info without going through Top SQL.
 - **Panels** — Server (`I`), Connections (`C`), Locks (`A`), InnoDB (`V`), Replication (`W`),
   Top SQL (`T`, by digest, with a delta mode, text search and column-header sorting), Index diagnostics (`X`), Disk (`D`).
 - **Alerts** — 12 rules: connection saturation, waiting sessions, idle in transaction, long statements,
