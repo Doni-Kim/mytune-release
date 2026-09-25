@@ -56,6 +56,7 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   and a type or collation conversion that keeps an index from being used (warning 1739) is flagged. Needs MySQL 8.3 or later.
 - **Find SQL** (`Ctrl+F`) — type a statement digest to open its statistics, plan and Object Info without going through Top SQL.
 - **SQL tab** — the statement is the first tab of the detail (`[SQL] [Plan] [Object Info]`), and a one-line statement is laid out by clause. Only spaces and line breaks outside quotes change, never a character; `[Beautify]` switches to the original and back.
+- **One SQL window** (2.6) — the session detail, Top SQL and Find SQL open the same window: a summary with the sessions running the statement now, `[Statistics]` with the whole digest summary row and the response-time spread, and `[Excel]` in each. Plan (TREE) lines are coloured (red only for a join with no condition or a large scan).
 - **Panels** — Server (`I`), Connections (`C`), Locks (`A`), InnoDB (`V`), Replication (`W`),
   Top SQL (`T`, by digest, with a delta mode, text search and column-header sorting), Index diagnostics (`X`), Disk (`D`).
 - **Alerts** — 12 rules: connection saturation, waiting sessions, idle in transaction, long statements,
