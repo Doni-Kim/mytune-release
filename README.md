@@ -51,7 +51,7 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   its lock really conflicts. `F5` shows blockers together with the sessions they block.
 - **Session detail** (`Enter`) — full statement, execution plan, locks held, connection attributes.
   `Ctrl+K` kills the query or the whole connection; `Ctrl+X` exports the session to Excel (four sheets: session, SQL, plan, objects).
-- **Object Info** — in the session detail, `[Object Info]` shows every table the plan reads: size, columns (with histograms),
+- **Object Info** — in the session detail and in Top SQL (click a row), `[Object Info]` shows every table the plan reads: size, columns (with histograms),
   indexes (the ones this plan uses are highlighted, with cardinality and reads) and partitions. Columns in the plan's conditions are marked,
   and a type or collation conversion that keeps an index from being used (warning 1739) is flagged. Needs MySQL 8.3 or later.
 - **Panels** — Server (`I`), Connections (`C`), Locks (`A`), InnoDB (`V`), Replication (`W`),
