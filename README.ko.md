@@ -49,6 +49,7 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 - **Object Info**: 세션 상세와 Top SQL(줄을 누르면)의 `[Object Info]` 가 계획이 읽는 테이블마다 크기 · 컬럼(히스토그램) · 인덱스(이 계획이 쓴 것은 강조, 카디널리티 · 읽기 수) · 파티션을 보입니다.
   계획의 조건에 나온 컬럼에 표시하고, 형 · 콜레이션 변환으로 인덱스를 못 쓴 컬럼(경고 1739)을 ⚠ 로 짚습니다. MySQL 8.3 이상.
 - **Find SQL**(`Ctrl+F`): 문장 digest 를 넣으면 Top SQL 을 거치지 않고 그 문장의 통계 · 실행 계획 · Object Info 를 엽니다.
+- **SQL 탭**: 상세의 첫 탭(`[SQL] [Plan] [Object Info]`)이 문장이고, 한 줄 문장은 절마다 줄을 바꿔 보여 줍니다. 따옴표 밖의 공백 · 줄바꿈만 바뀌고 글자는 바뀌지 않으며, `[Beautify]` 로 원문과 오갑니다.
 - **팝업**: Server(`I`) · Connections(`C`) · Locks(`A`) · InnoDB(`V`) · Replication(`W`) · Top SQL(`T`, 델타 · 검색 · 머리글 정렬) · 인덱스 진단(`X`) · Disk(`D`).
 - **임계값 알림** 12종: 접속 포화 · 대기 세션 · idle in transaction · 긴 문장 · 버퍼 풀 적중률 · 롤백 비율 · 디스크 임시 테이블 · Lock Chain · 데드락 · history list · 복제 지연 · 복제 스레드 중단.
 - **History**: `L` 로 로컬 SQLite 에 모니터링 데이터를 쌓고, `H` 로 지난 흐름을 되짚습니다.
