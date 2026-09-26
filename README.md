@@ -17,17 +17,19 @@ Free to use, no strings attached.
 
 | Live dashboard | Top SQL |
 |---|---|
-| ![Dashboard](screenshots/dashboard.png) | ![Top SQL](screenshots/top-sql.png) |
+| ![Dashboard](screenshots/dashboard.jpg) | ![Top SQL](screenshots/top-sql.jpg) |
 
 | Lock chains | Session detail |
 |---|---|
-| ![Locks](screenshots/locks.png) | ![Session detail](screenshots/session-detail.png) |
+| ![Locks](screenshots/locks.jpg) | ![Session detail](screenshots/session-detail.jpg) |
 
-| History | Alerts |
+| History | InnoDB |
 |---|---|
-| ![History](screenshots/history.png) | ![Alerts](screenshots/alerts.png) |
+| ![History](screenshots/history.jpg) | ![InnoDB](screenshots/innodb.jpg) |
 
-![Dark theme](screenshots/dashboard-dark.png)
+| Alerts | Index diagnostics |
+|---|---|
+| ![Alerts](screenshots/alerts.jpg) | ![Indexes](screenshots/indexes.jpg) |
 
 The screenshots show a throwaway demo server with a made-up `shop` schema.
 

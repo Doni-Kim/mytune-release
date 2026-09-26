@@ -16,17 +16,19 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 
 | 실시간 대시보드 | Top SQL |
 |---|---|
-| ![대시보드](screenshots/dashboard.png) | ![Top SQL](screenshots/top-sql.png) |
+| ![대시보드](screenshots/dashboard.jpg) | ![Top SQL](screenshots/top-sql.jpg) |
 
 | Lock Chain | 세션 상세 |
 |---|---|
-| ![Lock Chain](screenshots/locks.png) | ![세션 상세](screenshots/session-detail.png) |
+| ![Lock Chain](screenshots/locks.jpg) | ![세션 상세](screenshots/session-detail.jpg) |
 
-| History | 알림 |
+| History | InnoDB |
 |---|---|
-| ![History](screenshots/history.png) | ![알림](screenshots/alerts.png) |
+| ![History](screenshots/history.jpg) | ![InnoDB](screenshots/innodb.jpg) |
 
-![어두운 테마](screenshots/dashboard-dark.png)
+| 알림 | 인덱스 진단 |
+|---|---|
+| ![알림](screenshots/alerts.jpg) | ![인덱스](screenshots/indexes.jpg) |
 
 화면은 촬영용으로 잠깐 띄운 서버의 가상 `shop` 스키마입니다.
 
