@@ -44,9 +44,11 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 
 ## What it does
 
-- **Live dashboard** — buffer pool hit ratio and connections (gauges), QPS / TPS / running / waiting (trend graphs),
-  row lock waits, deadlocks, rollbacks, slow queries, rows read and modified, disk read / write, network in / out,
-  redo and history list length, top wait events, and the session list. Each metric appears once.
+- **Live dashboard** — buffer pool hit ratio and connections (gauges); six trend graphs, the work that came in on the left
+  (QPS, TPS, running) and what it cost on the right (waiting, disk bytes, redo bytes); eighteen performance values in six
+  groups — locks and aborted connections, rollbacks / history list / long transactions, disk read / write / fsyncs,
+  rows read and modified / dirty pages, network in / out / replication lag, slow queries / full scans / sort merge passes;
+  top wait events, and the session list. Each metric appears once.
   Cumulative server counters are always shown as the change since the previous sample.
 - **Lock chains that name the real blocker** — row locks come from `data_lock_waits`; metadata locks are
   resolved with the server's own lock-compatibility rules, so a session is listed as a blocker only when
@@ -63,9 +65,11 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   Top SQL (`T`, by digest, with a delta mode, text search and column-header sorting), Index diagnostics (`X`), Disk (`D`).
 - **Alerts** — 12 rules: connection saturation, waiting sessions, idle in transaction, long statements,
   buffer pool hit, rollback ratio, temp tables on disk, lock chains, deadlocks, history list,
-  replication lag and stopped replication threads — with your own thresholds.
+  replication lag and stopped replication threads — with your own thresholds (a threshold of 0 turns that level off).
 - **History** — press `L` to log every sample into a local SQLite file, then `H` to look back.
-  - Ranges: 1 hour / 6 hours / 24 hours / 1 week / 1 month / all. 17 metrics.
+  - Ranges: 1 hour / 6 hours / 24 hours / 1 week / 1 month / all.
+  - Every value on the main screen can be charted (31 metrics, grouped by panel, under the same names). Byte values pick
+    their unit per range, and a value that was not recorded is left out instead of being drawn as 0.
   - Old rows are trimmed automatically (30 days of metrics, 7 days of sessions by default; change it with `O`).
 - **Excel export** — built on ClosedXML, so the `.xlsx` is written even without Excel installed.
 - Reconnects by itself when the connection drops.
@@ -81,7 +85,7 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 - **Admin reference** — the second `F1` tab looks up, as you type, the documentation the server itself carries: the
   `sys` schema routines (description, parameters, example) and the server help tables that `HELP` reads (700 statements
   and functions, with a documentation link) — so it always matches the server's version, with no internet needed.
-  54 common admin tasks come with a sample to copy; mytune never runs admin statements.
+  58 common admin tasks come with a sample to copy; mytune never runs admin statements.
 - **One settings file per server** — with two or more next to the executable, mytune asks which one to use at startup.
   A file broken by a hand edit is listed in red with the line and position of the error.
 - **Settings screen** — `O` changes the collection interval (3–60 s, 5 by default), log retention, Top SQL, Excel, alert
@@ -120,9 +124,10 @@ another user's running statement is only available to an administrative account 
 Disk (`D`) and index diagnostics (`X`) see only schemas the account has a privilege on — `information_schema`
 hides the rest without an error. mytune says how many schemas are hidden; grant `SELECT` on them to see them.
 
-## Blank window? (WebView2)
+## WebView2 Runtime
 
-If the window opens but stays blank, the WebView2 runtime is missing.
+mytune draws its window with the Microsoft Edge WebView2 Runtime. When the runtime is missing, mytune says so at startup
+and exits (2.8 — earlier versions opened a blank window).
 
 - **Windows 11** — built into the OS, always present.
 - **Windows 10** — shipped through Windows Update since 2021, so it is there on most machines.
