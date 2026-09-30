@@ -30,6 +30,10 @@ MySQL 상태를 실시간으로 보는 데스크톱 모니터입니다. 창 하�
 |---|---|
 | ![알림](screenshots/alerts.jpg) | ![인덱스](screenshots/indexes.jpg) |
 
+| 실행 계획 · Fix this plan | 문장 통계 |
+|---|---|
+| ![실행 계획](screenshots/plan.jpg) | ![문장 통계](screenshots/statistics.jpg) |
+
 화면은 촬영용으로 잠깐 띄운 서버의 가상 `shop` 스키마입니다.
 
 ## 설치·설정

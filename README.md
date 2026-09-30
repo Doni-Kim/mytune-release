@@ -31,6 +31,10 @@ Free to use, no strings attached.
 |---|---|
 | ![Alerts](screenshots/alerts.jpg) | ![Indexes](screenshots/indexes.jpg) |
 
+| Execution plan · Fix this plan | Statement statistics |
+|---|---|
+| ![Plan](screenshots/plan.jpg) | ![Statistics](screenshots/statistics.jpg) |
+
 The screenshots show a throwaway demo server with a made-up `shop` schema.
 
 ## Install
