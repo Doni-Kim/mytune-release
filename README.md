@@ -41,10 +41,9 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
 
 - Unzip, keep the folder together, and run `mytune.exe` (single-file publish).
 - No .NET install needed — the runtime is inside the executable.
-- The only thing to set up is a connection file next to the executable. The zip ships two, `mytuneNode1.json` and
-  `mytuneNode2.json` — one file per server. Watching a single server? Keep one and delete the other.
-  Either edit it (see below), or just run `mytune.exe` — when the values do not connect, a connection dialog opens with
-  them filled in. Once the connection has succeeded, what you typed is saved back (the password is stored encrypted).
+- The connection window opens first: add a server with **+ New**, fill in host, port, user and password, and press
+  **Connect**. Connections and settings are kept in `mytune.db` next to the executable (passwords encrypted).
+- Coming from 2.x? Overwrite `mytune.exe` — the connection json files next to it are brought in on the first start (below).
 
 ## What it does
 
@@ -91,11 +90,14 @@ The screenshots show a throwaway demo server with a made-up `shop` schema.
   `sys` schema routines (description, parameters, example) and the server help tables that `HELP` reads (700 statements
   and functions, with a documentation link) — so it always matches the server's version, with no internet needed.
   58 common admin tasks come with a sample to copy; mytune never runs admin statements.
-- **One settings file per server** — with two or more next to the executable, mytune asks which one to use at startup.
-  A file broken by a hand edit is listed in red with the line and position of the error.
+- **Connection window** (3.0) — saved connections on the left (most recently used first), the selected one on the right.
+  **Test** connects, shows the server version and disconnects without saving; **Connect** saves only after it connects.
+- **Top bar** (3.0) — the dot before the address is blue while collecting (click it to disconnect) and red while reconnecting
+  or disconnected (click it to connect now). **Connection** switches to another server without closing the window, and the
+  GitHub icon opens this page.
 - **Settings screen** — `O` changes the collection interval (3–60 s, 5 by default), log retention, Top SQL, Excel, alert
-  thresholds and which sessions `L` logs. Values are checked, saved to the settings file in use and applied at once;
-  the connection itself is changed only in the startup window.
+  thresholds and which sessions `L` logs. Values are checked, saved for the current connection (Excel is shared by all
+  connections) and applied at once.
 - **12 themes** — six light, six dark, GitHub Light by default; pick one from the top bar.
 - **Server not answering at startup** — a small window shows whom mytune is connecting to and for how long, with
   Cancel to fix the connection, instead of an empty screen for 20-odd seconds.
@@ -157,38 +159,24 @@ Errors are written to `mytune.log` next to the executable (the file only appears
 - MySqlConnector · Microsoft.Data.Sqlite · ClosedXML · Microsoft.Web.WebView2 · Microsoft.AspNetCore.Components.WebView.WindowsForms
 - Copyright notices and license texts of these bundled components: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) (also inside the zip)
 
-## Connection files (`mytuneNode1.json` …)
+## Connections and settings (`mytune.db`, 3.0)
 
-The zip ships two small templates, `mytuneNode1.json` (this PC — `localhost:3306`, `root`) and `mytuneNode2.json`
-(another server, monitoring login `mytune`) — one file per server, and any name works (`prod.json`, `dev.json` …). With two or more next to `mytune.exe`, mytune asks
-which one to use at startup — the list shows `user@server:port/schema`, never the password. With just one, it connects
-straight away. The chosen file is that run's settings: the encrypted password, window position and theme are saved to it.
-Only one mytune runs per folder; to watch several servers at the same time, use one folder per server.
-Edit a file, or let the connection dialog fill it in:
+Everything mytune keeps lives in `mytune.db` next to `mytune.exe`: the connections, each connection's settings (interval,
+alerts, Top SQL, log retention, log filter) and the window position and theme. Settings are changed only in `O`, so there is
+no file to break by hand. To update mytune, overwrite `mytune.exe`; deleting `mytune.db` starts from scratch.
+It holds the encrypted passwords — do not hand it to others.
 
-```json
-{
-  "databases": [
-    {
-      "userId": "root",
-      "password": "change-me",
-      "server": "127.0.0.1",
-      "port": "3306",
-      "database": "",
-      "sslMode": "preferred"
-    }
-  ],
-  "interval": 5
-}
-```
-
-- Write `password` in plain text — it is encrypted on the first run and stored back.
-- `database` may stay empty — mytune watches the whole server.
-- `sslMode`: `none` / `preferred` / `required` / `verify-ca` / `verify-full`. `sslCa`: the CA file (.pem) the verify modes trust — empty means the Windows certificate store. An unknown `sslMode` is reported instead of connecting.
-- `interval` is the collection interval in seconds, 3–60 (5 when left out).
-- Sections such as `alerts`, `topSql`, `logRetention` and `logFilter` (which sessions `L` logs) are optional —
-  mytune fills them in with the defaults when it closes, and `O` edits them on screen. `mytune_sample_en.json` in the zip
-  documents every setting.
+- **Schema** may stay empty — mytune watches the whole server.
+- **SSL mode**: `none` / `preferred` (default) / `required` / `verify-ca` / `verify-full`. **SSL CA**: the CA file (.pem) the
+  verify modes trust — MySQL's own certificate is not in the Windows store, so give its `ca.pem` here.
+- Servers mytune cannot watch (MySQL below 8.0, MariaDB, `performance_schema=OFF`) are refused in the connection window, with the reason.
+- Only one mytune runs per folder. Switch servers with **Connection** on the top bar, or use one folder per server to watch
+  several at the same time.
+- **Coming from 2.x** — overwrite `mytune.exe` in the old folder. On the first start the connection json files next to it
+  (`mytune.json`, `mytuneNode1.json`, `prod.json` …) are read once, one connection per file, together with their settings
+  (`sslMode` and `sslCa` too); plain and old-format passwords are encrypted. The json files are neither changed nor deleted —
+  delete them yourself once you have checked (safer if they held plain passwords). A broken file is skipped, and the
+  connection window says which line is wrong.
 
 ## Terms
 
