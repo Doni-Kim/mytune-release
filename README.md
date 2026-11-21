@@ -1,0 +1,193 @@
+# mytune — a real-time MySQL monitor (free)
+
+![.NET 11](https://img.shields.io/badge/.NET-11.0-512BD4)
+![C# 15](https://img.shields.io/badge/C%23-15-239120)
+![Blazor Hybrid](https://img.shields.io/badge/Blazor-Hybrid-5C2D91)
+![MySQL 8.0+](https://img.shields.io/badge/MySQL-8.0%2B-4479A1)
+![Windows x64](https://img.shields.io/badge/Windows-x64-0078D6)
+
+**[Download the latest release](https://github.com/Doni-Kim/mytune-release/releases/latest)** ·
+[한국어 설명](README.ko.md) · [Manual (English)](mytune.en.html) · [매뉴얼 (한국어)](mytune.ko.html)
+
+mytune is a desktop monitor for MySQL. One window, one executable, nothing to install on the server —
+everything is read from `performance_schema`, `information_schema` and `sys`.
+Free to use, no strings attached.
+
+## Screenshots
+
+| Live dashboard | Top SQL |
+|---|---|
+| ![Dashboard](screenshots/dashboard.jpg) | ![Top SQL](screenshots/top-sql.jpg) |
+
+| Lock chains | Session detail |
+|---|---|
+| ![Locks](screenshots/locks.jpg) | ![Session detail](screenshots/session-detail.jpg) |
+
+| History | InnoDB |
+|---|---|
+| ![History](screenshots/history.jpg) | ![InnoDB](screenshots/innodb.jpg) |
+
+| Alerts | Index diagnostics |
+|---|---|
+| ![Alerts](screenshots/alerts.jpg) | ![Indexes](screenshots/indexes.jpg) |
+
+| Execution plan · Fix this plan | Statement statistics |
+|---|---|
+| ![Plan](screenshots/plan.jpg) | ![Statistics](screenshots/statistics.jpg) |
+
+The screenshots show a throwaway demo server with a made-up `shop` schema.
+
+## Install
+
+- Unzip, keep the folder together, and run `mytune.exe` (single-file publish).
+- No .NET install needed — the runtime is inside the executable.
+- The connection window opens first: add a server with **+ New**, fill in host, port, user and password, and press
+  **Connect**. Connections and settings are kept in `mytune.db` next to the executable (passwords encrypted).
+- Coming from 2.x? Overwrite `mytune.exe` — the connection json files next to it are brought in on the first start (below).
+
+## What it does
+
+- **Live dashboard** — buffer pool hit ratio and connections (gauges); six trend graphs, the work that came in on the left
+  (QPS, TPS, running) and what it cost on the right (waiting, disk bytes, redo bytes); eighteen performance values in six
+  groups — locks and aborted connections, rollbacks / history list / long transactions, disk read / write / fsyncs,
+  rows read and modified / dirty pages, network in / out / replication lag, slow queries / full scans / sort merge passes;
+  top wait events, and the session list. Each metric appears once.
+  Cumulative server counters are always shown as the change since the previous sample.
+- **Lock chains that name the real blocker** — row locks come from `data_lock_waits`; metadata locks are
+  resolved with the server's own lock-compatibility rules, so a session is listed as a blocker only when
+  its lock really conflicts. `F5` shows blockers together with the sessions they block.
+- **Session detail** (`Enter`) — full statement, execution plan, locks held, connection attributes.
+  `Ctrl+K` kills the query or the whole connection; `Ctrl+X` exports the session to Excel (four sheets: session, SQL, plan, objects).
+- **Object Info** — in the session detail and in Top SQL (click a row), `[Object Info]` shows every table the plan reads: size, columns (with histograms),
+  indexes (the ones this plan uses are highlighted, with cardinality and reads) and partitions. Columns in the plan's conditions are marked,
+  and a type or collation conversion that keeps an index from being used (warning 1739) is flagged. Needs MySQL 8.3 or later.
+- **Find SQL** (`Ctrl+F`) — type a statement digest to open its statistics, plan and Object Info without going through Top SQL.
+- **SQL tab** — the statement is the first tab of the detail (`[SQL] [Plan] [Object Info]`), and a one-line statement is laid out by clause. Only spaces and line breaks outside quotes change, never a character; `[Beautify]` switches to the original and back.
+- **Plan-fixing hints** (2.12, MySQL 8.0.20+) — under the plan, the optimizer hints that hold the current plan (JOIN_ORDER, hash join or nested loop, index use), placed right after the statement's first keyword (shown, never run).
+- **One SQL window** (2.6) — the session detail, Top SQL and Find SQL open the same window: a summary with the sessions running the statement now, `[Statistics]` with the whole digest summary row and the response-time spread, and `[Excel]` in each. Plan (TREE) lines are coloured (red only for a join with no condition or a large scan).
+- **Panels** — Server (`I`), Connections (`C`), Locks (`A`), InnoDB (`V`), Replication (`W`),
+  Top SQL (`T`, by digest, with a delta mode, text search and column-header sorting), Index diagnostics (`X`), Disk (`D`).
+- **Alerts** — 12 rules: connection saturation, waiting sessions, idle in transaction, long statements,
+  buffer pool hit, rollback ratio, temp tables on disk, lock chains, deadlocks, history list,
+  replication lag and stopped replication threads — with your own thresholds (a threshold of 0 turns that level off).
+- **History** — press `L` to log every sample into a local SQLite file, then `H` to look back.
+  - Ranges: 1 hour / 6 hours / 24 hours / 1 week / 1 month / all.
+  - Every value on the main screen can be charted (31 metrics, grouped by panel, under the same names). Byte values pick
+    their unit per range, and a value that was not recorded is left out instead of being drawn as 0.
+  - Old rows are trimmed automatically (30 days of metrics, 7 days of sessions by default; change it with `O`).
+- **Excel export** — built on ClosedXML, so the `.xlsx` is written even without Excel installed.
+- Reconnects by itself when the connection drops.
+- **New in 2.2** — Error log popup (`E`, from `performance_schema.error_log`, MySQL 8.0.22+); Changed settings and
+  Memory in use in Server; Load by user in Connections; Hot tables in Index; P95 / P99 in Top SQL.
+- **Blocking tree** — Locks (`A`) draws who blocks whom as a tree, and the Excel export carries the whole chain.
+- **Find** — `/` filters the session list by text.
+- **When an alert fires** — the blocking tree, statements or the deadlock report are saved to a file under `captures\`,
+  and a Critical alert flashes the taskbar and shows a Windows notification when the window is not in front.
+- In History, click a point in time to see the sessions that were logged at that moment.
+- `sslMode` gains `verify-ca` / `verify-full`, with `sslCa` for the CA file; a rejected certificate is explained in the
+  connection dialog. Hot tables now shows 50 rows with its share of all table I/O time and a `Δ delta` mode.
+- **Admin reference** — the second `F1` tab looks up, as you type, the documentation the server itself carries: the
+  `sys` schema routines (description, parameters, example) and the server help tables that `HELP` reads (700 statements
+  and functions, with a documentation link) — so it always matches the server's version, with no internet needed.
+  58 common admin tasks come with a sample to copy; mytune never runs admin statements.
+- **Connection window** (3.0) — saved connections on the left (most recently used first), the selected one on the right.
+  **Test** connects, shows the server version and disconnects without saving; **Connect** saves only after it connects.
+- **Top bar** (3.0) — the dot before the address is blue while collecting (click it to disconnect) and red while reconnecting
+  or disconnected (click it to connect now). **Connection** switches to another server without closing the window, and the
+  GitHub icon opens this page.
+- **Settings screen** — `O` changes the collection interval (3–60 s, 5 by default), log retention, Top SQL, Excel, alert
+  thresholds and which sessions `L` logs. Values are checked, saved for the current connection (Excel is shared by all
+  connections) and applied at once.
+- **12 themes** — six light, six dark, GitHub Light by default; pick one from the top bar.
+- **Server not answering at startup** — a small window shows whom mytune is connecting to and for how long, with
+  Cancel to fix the connection, instead of an empty screen for 20-odd seconds.
+- Press `F1` for the keyboard shortcuts, and again for the Admin Reference tab.
+
+The bundled `mytune.en.html` is the full manual with screenshots (`mytune.ko.html` in Korean).
+
+## Requirements and limits
+
+- **Windows only.** The UI is web-based (Blazor Hybrid), so it does not run standalone on Linux or macOS.
+- **MySQL 8.0 or later** with `performance_schema=ON` — checked on 8.0.46 and the current release.
+  MySQL-compatible distributions with the same `performance_schema` layout (such as Percona Server 8.0+) work the same way.
+- **MariaDB is not supported** — its `performance_schema` has no `data_locks` / `data_lock_waits`.
+  mytune tells you so in the connection dialog.
+- The code is obfuscated with ConfuserEx — a free tool, so do not expect strong protection.
+
+## A dedicated monitoring account
+
+```sql
+CREATE USER 'mytune'@'%' IDENTIFIED BY '...';
+GRANT PROCESS ON *.* TO 'mytune'@'%';                  -- other users' sessions, innodb_metrics
+GRANT SELECT ON performance_schema.* TO 'mytune'@'%';
+GRANT SELECT ON sys.* TO 'mytune'@'%';                 -- index diagnostics
+GRANT REPLICATION CLIENT ON *.* TO 'mytune'@'%';       -- optional: Replication panel and alerts
+GRANT CONNECTION_ADMIN ON *.* TO 'mytune'@'%';         -- optional: Ctrl+K on other users' sessions
+```
+
+With such an account the plan in Session detail is an *estimated* plan (and says so); the live plan of
+another user's running statement is only available to an administrative account such as root.
+
+Disk (`D`) and index diagnostics (`X`) see only schemas the account has a privilege on — `information_schema`
+hides the rest without an error. mytune says how many schemas are hidden; grant `SELECT` on them to see them.
+
+## WebView2 Runtime
+
+mytune draws its window with the Microsoft Edge WebView2 Runtime. When the runtime is missing, mytune says so at startup
+and exits (2.8 — earlier versions opened a blank window).
+
+- **Windows 11** — built into the OS, always present.
+- **Windows 10** — shipped through Windows Update since 2021, so it is there on most machines.
+  A PC that has not been updated in a long time, or a special edition such as LTSC, may not have it.
+- **Windows Server (2016/2019/2022)** — often not included; install it separately.
+
+Install Microsoft's "Evergreen Standalone Installer"
+(`MicrosoftEdgeWebView2RuntimeInstallerX64.exe`) from
+https://developer.microsoft.com/microsoft-edge/webview2/
+
+The WebView2 cache is kept in a `WebView2` folder next to `mytune.exe` (3.0.1 — before, `%LOCALAPPDATA%\mytune.WebView2`,
+which you can delete). When the exe folder is not writable, the default location is used.
+
+## If something breaks
+
+Errors are written to `mytune.log` next to the executable (the file only appears when something went wrong).
+
+- **Bugs and questions** — open an [issue](https://github.com/Doni-Kim/mytune-release/issues).
+  Please do not attach the log there: it holds no passwords, but it can contain server addresses and SQL text.
+- **The log file**, or anything you would rather not post in public — mail it to **doniikim@gmail.com**.
+
+## Built with
+
+- .NET 11.0 (x64), C# 15, Blazor Hybrid
+- MySqlConnector · Microsoft.Data.Sqlite · ClosedXML · Microsoft.Web.WebView2 · Microsoft.AspNetCore.Components.WebView.WindowsForms
+- Copyright notices and license texts of these bundled components: [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) (also inside the zip)
+
+## Connections and settings (`mytune.db`, 3.0)
+
+Everything mytune keeps lives in `mytune.db` next to `mytune.exe`: the connections, each connection's settings (interval,
+alerts, Top SQL, log retention, log filter) and the window position and theme. Settings are changed only in `O`, so there is
+no file to break by hand. To update mytune, overwrite `mytune.exe`; deleting `mytune.db` starts from scratch.
+It holds the encrypted passwords — do not hand it to others.
+
+- **Schema** may stay empty — mytune watches the whole server.
+- **SSL mode**: `none` / `preferred` (default) / `required` / `verify-ca` / `verify-full`. **SSL CA**: the CA file (.pem) the
+  verify modes trust — MySQL's own certificate is not in the Windows store, so give its `ca.pem` here.
+- Servers mytune cannot watch (MySQL below 8.0, MariaDB, `performance_schema=OFF`) are refused in the connection window, with the reason.
+- Only one mytune runs per folder. Switch servers with **Connection** on the top bar, or use one folder per server to watch
+  several at the same time.
+- **Coming from 2.x** — overwrite `mytune.exe` in the old folder. On the first start the connection json files next to it
+  (`mytune.json`, `mytuneNode1.json`, `prod.json` …) are read once, one connection per file, together with their settings
+  (`sslMode` and `sslCa` too); plain and old-format passwords are encrypted. The json files are neither changed nor deleted —
+  delete them yourself once you have checked (safer if they held plain passwords). A broken file is skipped, and the
+  connection window says which line is wrong.
+
+## Terms
+
+Free to use, at work or at home. Please do not redistribute the binary or reverse-engineer it.
+The source is not published.
+
+## Contact
+
+DBMS Works — **doniikim@gmail.com**
+
+Also available for Oracle → PostgreSQL / MySQL migration and database performance tuning work.
